@@ -24,7 +24,6 @@ module InstanceCounter
         self.class.instance = 1
       else
         self.class.instance += 1
-        puts self.class.instance
       end
     end
   end
