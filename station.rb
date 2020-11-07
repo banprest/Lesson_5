@@ -13,6 +13,7 @@ class Station
     @trains = []
     @@stations << self
     register_instance
+    validate!
   end
 
   def add_train(train)
@@ -25,5 +26,18 @@ class Station
 
   def delete_train(train)
     @trains.delete(train)
+  end
+
+  def valid?
+    validate!
+    true
+  rescue 
+    false
+  end
+
+  private
+
+  def validate!
+    raise 'Название не должно быть пустым' if name.length.zero?
   end
 end

@@ -40,7 +40,7 @@ class Main
       when '0'
         create_station
       when '1'
-        create_train
+        create_train_in_error
       when '2'
         create_route
       when '3'
@@ -70,7 +70,7 @@ class Main
     end
   end
 
-  #private
+  private
 
   def create_station
     puts 'Введите название станции'
@@ -89,7 +89,7 @@ class Main
 
   def create_train
     puts 'Введите номер, и тип к которому он принадлежит "passenger" или "cargo"'
-    id = gets.chomp.to_i
+    id = gets.chomp
     type = gets.chomp.to_sym
     if type == :passenger
       @trains << PassengerTrain.new(id)
@@ -98,6 +98,13 @@ class Main
     else 
       return nil
     end
+  end
+
+  def create_train_in_error
+    create_train
+  rescue
+    puts 'Неправильный формат номера'
+    retry
   end
 
   def create_railcar

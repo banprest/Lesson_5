@@ -5,6 +5,8 @@ class Train
 
   attr_reader :railcar, :type, :current_station, :number
 
+  NUMBER_FORMAT = /^[а-я0-9]{3}[-]*{1}[а-я0-9]{2}$/i
+
   @@trains = []
 
   def self.find(num)
@@ -23,6 +25,7 @@ class Train
     @speed = 0
     @@trains << self
     register_instance
+    validate!
   end
 
   def stop
@@ -69,8 +72,18 @@ class Train
     railcar.type == :passenger
   end
 
+  def valid?
+    validate!
+    true
+  rescue 
+    false
+  end
+
   protected
 
+  def validate!
+    raise 'Неправильный формат номера' if number !~ NUMBER_FORMAT
+  end
 
   def add_railcar(railcar)
     @railcar << railcar
