@@ -11,7 +11,7 @@ require_relative 'passenger_railcar.rb'
 
 
 class Main
-  attr_reader :stations, :routes, :trains
+  attr_reader :stations, :routes, :trains,
 
   def initialize
     @stations = []
@@ -32,7 +32,9 @@ class Main
       Для того чтобы переместить поезд вперед введите 8.
       Для того чтобы переместить поезд назад введите 9.
       Чтобы просмотреть список станций введите 10.
-      Чтобы просмотреть список поездов введите 11. '
+      Чтобы просмотреть список поездов введите 11.
+      Чтобы посмотреть список вагонов введите 12
+      Чтобы изменить обьём или места в вагоне введите 13 '
 
       choise = gets.chomp
 
@@ -60,7 +62,11 @@ class Main
       when '10'
         show_station
       when '11'
-        show_train
+        show_train_in_station
+      when '12'
+        show_railcar_in_train
+      when '13'
+        take_place_or_volume
       else 
         puts 'EROR'
       end
@@ -68,6 +74,16 @@ class Main
     break_say = gets.chomp
     break if break_say == 'да'
     end
+  end
+
+  def sett
+    create_station
+    create_station
+    create_train
+    create_route
+    add_railcar_to_train
+    add_railcar_to_train
+    add_railcar_to_train
   end
 
   private
@@ -92,9 +108,9 @@ class Main
     id = gets.chomp
     type = gets.chomp.to_sym
     if type == :passenger
-      @trains << PassengerTrain.new(id)
+      PassengerTrain.new(id)
     elsif type == :cargo
-      @trains << CargoTrain.new(id)
+      CargoTrain.new(id)
     else 
       return nil
     end
@@ -110,9 +126,13 @@ class Main
   def create_railcar
     type = gets.chomp.to_sym
     if type == :passenger
-      PassengerRailcar.new
+      puts 'Введите количество мест в вагоне'
+      places = gets.chomp.to_i
+      @railcars << PassengerRailcar.new(places)
     elsif type == :cargo
-      CargoRailcar.new
+      puts 'Введите обьем'
+      volume = gets.chomp.to_i
+      @railcars << CargoRailcar.new(volume)
     else 
       return nil
     end
@@ -194,14 +214,49 @@ class Main
   end
 
   def show_train
-    @trains.each_with_index do |id_train, num|
-      puts "#{id_train.number} #{num}"
+    @trains.each_with_index do |train, num|
+      puts "#{train.number} #{num}"
     end
   end
 
-  def sett
-    create_train
-    create_train
-    create_train
+  def show_train_in_station
+    num = -1
+    show_station
+    puts 'Введите номер станции'
+    num_station = gets.chomp.to_i
+    @stations[num_station].show_train do |train|
+      train.each { |train| puts "#{train.number} #{num += 1}" }
+    end
   end
+
+  def show_railcar_in_train
+    num = -1
+    show_train_in_station
+    puts 'Введите индекс поезда'
+    num_train = gets.chomp.to_i
+    @trains[num_train].show_railcar do |railcar|
+      railcar.each { |railcar| puts "#{railcar.type} #{num += 1}" }
+    end
+  end
+
+  def take_place_or_volume
+    show_railcar
+    puts 'Введите тип, индекс вагона, поезда и станции'
+    type = gets.chomp.to_sym
+    num_railcar = gets.chomp.to_i
+    num_train = gets.chomp.to_i
+    num_station = gets.chomp.to_i
+    if type == :cargo
+      vol = gets.chomp.to_i
+      @station[num_station].show_train do |train|
+        train[num_train].railcar[num_railcar].take_the_volume[vol]
+      end
+    elsif type == :passenger
+      @station[num_station].show_train do |train|
+        train[num_train].railcar[num_railcar].take_the_place
+      end
+    else
+      return nil
+    end
+  end  
 end

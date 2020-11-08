@@ -79,6 +79,10 @@ class Train
     false
   end
 
+  def show_railcar(&block)
+    block.call(@railcar)
+  end
+
   protected
 
   def validate!

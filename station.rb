@@ -35,6 +35,9 @@ class Station
     false
   end
 
+  def show_train(&block)
+    block.call(@trains)
+  end
   private
 
   def validate!
