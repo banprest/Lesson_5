@@ -80,7 +80,7 @@ class Train
   end
 
   def show_railcar(&block)
-    block.call(@railcar)
+    block.call(@railcar) 
   end
 
   protected

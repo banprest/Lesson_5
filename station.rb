@@ -28,7 +28,7 @@ class Station
     @trains.delete(train)
   end
 
-  def valid?
+  def valid? 
     validate!
     true
   rescue 

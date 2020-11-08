@@ -1,4 +1,4 @@
-class PassengerRailcar < Railcar
+class PassengerRailcar < Railcar 
 attr_reader :type, :free_places, :not_free_places, :places
   
   def initialize(places)

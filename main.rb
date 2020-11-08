@@ -11,7 +11,7 @@ require_relative 'passenger_railcar.rb'
 
 
 class Main
-  attr_reader :stations, :routes, :trains,
+  attr_reader :stations, :routes, :trains
 
   def initialize
     @stations = []
@@ -77,16 +77,21 @@ class Main
   end
 
   def sett
-    create_station
-    create_station
-    create_train
-    create_route
-    add_railcar_to_train
-    add_railcar_to_train
-    add_railcar_to_train
+    a = Station.new('a')
+    c = Station.new('a')
+    @stations << a
+    @stations << c
+    x = Route.new(a,c)
+    t = CargoTrain.new('12345')
+    z = CargoRailcar.new(100)
+    s = CargoRailcar.new(100)
+    t.add_cargo_railcar(z)
+    t.add_cargo_railcar(s)
+    t.add_train_to_route(x)
+
   end
 
-  private
+  #private
 
   def create_station
     puts 'Введите название станции'
@@ -108,9 +113,9 @@ class Main
     id = gets.chomp
     type = gets.chomp.to_sym
     if type == :passenger
-      PassengerTrain.new(id)
+      @trains << PassengerTrain.new(id)
     elsif type == :cargo
-      CargoTrain.new(id)
+      @trains << CargoTrain.new(id)
     else 
       return nil
     end
@@ -128,11 +133,11 @@ class Main
     if type == :passenger
       puts 'Введите количество мест в вагоне'
       places = gets.chomp.to_i
-      @railcars << PassengerRailcar.new(places)
+      PassengerRailcar.new(places)
     elsif type == :cargo
       puts 'Введите обьем'
       volume = gets.chomp.to_i
-      @railcars << CargoRailcar.new(volume)
+      CargoRailcar.new(volume)
     else 
       return nil
     end
@@ -188,7 +193,7 @@ class Main
     if railcar.type == :cargo
       @trains[num_train].add_cargo_railcar(railcar)
     elsif railcar.type == :passenger
-        @trains[num_train].add_passenger_railcar(railcar)
+      @trains[num_train].add_passenger_railcar(railcar)
     else
       return nil
     end
@@ -214,8 +219,8 @@ class Main
   end
 
   def show_train
-    @trains.each_with_index do |train, num|
-      puts "#{train.number} #{num}"
+    @trains.each_with_index do |id_train, num|
+      puts "#{id_train.number} #{num}"
     end
   end
 
@@ -240,19 +245,20 @@ class Main
   end
 
   def take_place_or_volume
-    show_railcar
+    show_railcar_in_train
     puts 'Введите тип, индекс вагона, поезда и станции'
     type = gets.chomp.to_sym
     num_railcar = gets.chomp.to_i
     num_train = gets.chomp.to_i
     num_station = gets.chomp.to_i
     if type == :cargo
+      puts 'Введите обьем который нужно занять'
       vol = gets.chomp.to_i
-      @station[num_station].show_train do |train|
-        train[num_train].railcar[num_railcar].take_the_volume[vol]
+      @stations[num_station].show_train do |train|
+        train[num_train].railcar[num_railcar].take_the_volume(vol)
       end
     elsif type == :passenger
-      @station[num_station].show_train do |train|
+      @stations[num_station].show_train do |train|
         train[num_train].railcar[num_railcar].take_the_place
       end
     else

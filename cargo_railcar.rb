@@ -1,4 +1,4 @@
-class CargoRailcar < Railcar
+class CargoRailcar < Railcar 
 attr_reader :type, :free_volume, :not_free_volume, :volume
   def initialize(volume)
     @volume = volume
