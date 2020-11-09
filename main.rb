@@ -76,22 +76,7 @@ class Main
     end
   end
 
-  def sett
-    a = Station.new('a')
-    c = Station.new('a')
-    @stations << a
-    @stations << c
-    x = Route.new(a,c)
-    t = CargoTrain.new('12345')
-    z = CargoRailcar.new(100)
-    s = CargoRailcar.new(100)
-    t.add_cargo_railcar(z)
-    t.add_cargo_railcar(s)
-    t.add_train_to_route(x)
-
-  end
-
-  #private
+  private
 
   def create_station
     puts 'Введите название станции'
