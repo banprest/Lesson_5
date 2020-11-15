@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module InstanceCounter
   def self.included(base)
     base.extend ClassMethod
@@ -6,10 +8,10 @@ module InstanceCounter
 
   module ClassMethod
     attr_accessor :instance
-    #Подскажите я уверен существует другой метод как это реализовать, но не могу понять как.
+
     def instances
-      if instance == nil
-        return 0
+      if instance.nil?
+        0
       else
         instance
       end
@@ -18,13 +20,10 @@ module InstanceCounter
 
   module InstanceMethod
     private
-    
+
     def register_instance
-      if self.class.instance == nil
-        self.class.instance = 1
-      else
-        self.class.instance += 1
-      end
+      self.class.instance ||= 0
+      self.class.instance += 1
     end
   end
 end

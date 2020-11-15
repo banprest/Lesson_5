@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 class Station
   include InstanceCounter
   attr_reader :name, :trains
 
   @@stations = []
 
-  def self.all 
+  def self.all
     @@stations
   end
 
@@ -28,16 +30,17 @@ class Station
     @trains.delete(train)
   end
 
-  def valid? 
+  def valid?
     validate!
     true
-  rescue 
+  rescue StandardError
     false
   end
 
   def show_train(&block)
     block.call(@trains)
   end
+
   private
 
   def validate!

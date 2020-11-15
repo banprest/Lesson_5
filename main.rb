@@ -1,16 +1,19 @@
-require_relative 'name_manufacturing_company.rb'
-require_relative 'instance_counter.rb'
-require_relative 'route.rb'
-require_relative 'station.rb'
-require_relative 'train.rb'
-require_relative 'cargo_train.rb'
-require_relative 'passenger_train.rb'
-require_relative 'railcar.rb'
-require_relative 'cargo_railcar.rb'
-require_relative 'passenger_railcar.rb'
+# frozen_string_literal: true
 
+require_relative 'name_manufacturing_company'
+require_relative 'instance_counter'
+require_relative 'route'
+require_relative 'station'
+require_relative 'train'
+require_relative 'cargo_train'
+require_relative 'passenger_train'
+require_relative 'railcar'
+require_relative 'cargo_railcar'
+require_relative 'passenger_railcar'
 
 class Main
+  MENU = { add: create_station }.freeze
+
   attr_reader :stations, :routes, :trains
 
   def initialize
@@ -21,20 +24,7 @@ class Main
 
   def menu
     loop do
-      puts 'Для создания станции введите - 0.
-      Для создания поезда введите - 1.
-      Для создания маршрута введите 2.
-      Для того чтобы добавить станцию к маршруту введите 3.
-      Для того чтобы удалить станцию из маршрута введите 4.
-      Для того чтобы назаначить маршрут поузду введите 5.
-      Для того чтобы добавить вагон к поезду введите 6.
-      Для того чтобы отцепить вагон от поезда введите 7.
-      Для того чтобы переместить поезд вперед введите 8.
-      Для того чтобы переместить поезд назад введите 9.
-      Чтобы просмотреть список станций введите 10.
-      Чтобы просмотреть список поездов введите 11.
-      Чтобы посмотреть список вагонов введите 12
-      Чтобы изменить обьём или места в вагоне введите 13 '
+      choise_menu
 
       choise = gets.chomp
 
@@ -57,7 +47,7 @@ class Main
         delete_railcar_to_train
       when '8'
         move_train_forward
-      when '9' 
+      when '9'
         move_train_back
       when '10'
         show_station
@@ -67,12 +57,12 @@ class Main
         show_railcar_in_train
       when '13'
         take_place_or_volume
-      else 
+      else
         puts 'EROR'
       end
-    puts 'Чтобы выйти из текстового интерфейса введите "да"'
-    break_say = gets.chomp
-    break if break_say == 'да'
+      puts 'Чтобы выйти из текстового интерфейса введите "да"'
+      break_say = gets.chomp
+      break if break_say == 'да'
     end
   end
 
@@ -97,34 +87,32 @@ class Main
     puts 'Введите номер, и тип к которому он принадлежит "passenger" или "cargo"'
     id = gets.chomp
     type = gets.chomp.to_sym
-    if type == :passenger
+    case type
+    when :passenger
       @trains << PassengerTrain.new(id)
-    elsif type == :cargo
+    when :cargo
       @trains << CargoTrain.new(id)
-    else 
-      return nil
     end
   end
 
   def create_train_in_error
     create_train
-  rescue
+  rescue StandardError
     puts 'Неправильный формат номера'
     retry
   end
 
   def create_railcar
     type = gets.chomp.to_sym
-    if type == :passenger
+    case type
+    when :passenger
       puts 'Введите количество мест в вагоне'
       places = gets.chomp.to_i
       PassengerRailcar.new(places)
-    elsif type == :cargo
+    when :cargo
       puts 'Введите обьем'
       volume = gets.chomp.to_i
       CargoRailcar.new(volume)
-    else 
-      return nil
     end
   end
 
@@ -175,12 +163,11 @@ class Main
     puts 'Введите тип вагона "passenger" или "cargo"'
     num_train = gets.chomp.to_i
     railcar = create_railcar
-    if railcar.type == :cargo
+    case railcar.type
+    when :cargo
       @trains[num_train].add_cargo_railcar(railcar)
-    elsif railcar.type == :passenger
+    when :passenger
       @trains[num_train].add_passenger_railcar(railcar)
-    else
-      return nil
     end
   end
 
@@ -236,18 +223,34 @@ class Main
     num_railcar = gets.chomp.to_i
     num_train = gets.chomp.to_i
     num_station = gets.chomp.to_i
-    if type == :cargo
+    case type
+    when :cargo
       puts 'Введите обьем который нужно занять'
       vol = gets.chomp.to_i
       @stations[num_station].show_train do |train|
         train[num_train].railcar[num_railcar].take_the_volume(vol)
       end
-    elsif type == :passenger
+    when :passenger
       @stations[num_station].show_train do |train|
         train[num_train].railcar[num_railcar].take_the_place
       end
-    else
-      return nil
     end
-  end  
+  end
+
+  def choise_menu
+    puts 'Для создания станции введите - 0.
+      Для создания поезда введите - 1.
+      Для создания маршрута введите 2.
+      Для того чтобы добавить станцию к маршруту введите 3.
+      Для того чтобы удалить станцию из маршрута введите 4.
+      Для того чтобы назаначить маршрут поузду введите 5.
+      Для того чтобы добавить вагон к поезду введите 6.
+      Для того чтобы отцепить вагон от поезда введите 7.
+      Для того чтобы переместить поезд вперед введите 8.
+      Для того чтобы переместить поезд назад введите 9.
+      Чтобы просмотреть список станций введите 10.
+      Чтобы просмотреть список поездов введите 11.
+      Чтобы посмотреть список вагонов введите 12
+      Чтобы изменить обьём или места в вагоне введите 13 '
+  end
 end

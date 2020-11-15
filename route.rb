@@ -1,13 +1,15 @@
+# frozen_string_literal: true
+
 class Route
   include InstanceCounter
   attr_reader :route, :starting_station, :terminal_station
 
-  def initialize(starting_station,terminal_station)
+  def initialize(starting_station, terminal_station)
     @starting_station = starting_station
     @terminal_station = terminal_station
     @route = [@starting_station, @terminal_station]
     register_instance
-    validate! 
+    validate!
   end
 
   def add_station(station)
@@ -21,7 +23,7 @@ class Route
   def valid?
     validate!
     true
-  rescue 
+  rescue StandardError
     false
   end
 
@@ -30,7 +32,5 @@ class Route
   def validate!
     raise 'Таких станций не существует' if starting_station.class && terminal_station.class != Station
     raise 'Начальная и конечная станция должны быть разными' if starting_station == terminal_station
-  end 
-
-
+  end
 end

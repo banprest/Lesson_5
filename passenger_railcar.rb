@@ -1,6 +1,8 @@
-class PassengerRailcar < Railcar 
-attr_reader :type, :free_places, :not_free_places, :places
-  
+# frozen_string_literal: true
+
+class PassengerRailcar < Railcar
+  attr_reader :type, :free_places, :not_free_places, :places
+
   def initialize(places)
     @type = :passenger
     @free_places = places
@@ -10,13 +12,13 @@ attr_reader :type, :free_places, :not_free_places, :places
   end
 
   def take_the_place
-    @free_places -= 1 if @free_places > 0
+    @free_places -= 1 if @free_places.positive?
     @not_free_places += 1 if @not_free_places < @places
   end
 
   private
 
   def validate!
-    raise 'Введите положительное число' if places < 0
+    raise 'Введите положительное число' if places.negative?
   end
 end
