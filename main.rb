@@ -12,8 +12,6 @@ require_relative 'cargo_railcar'
 require_relative 'passenger_railcar'
 
 class Main
-  MENU = { add: create_station }.freeze
-
   attr_reader :stations, :routes, :trains
 
   def initialize
@@ -159,8 +157,7 @@ class Main
 
   def add_railcar_to_train
     show_train
-    puts 'Введите номер поезда'
-    puts 'Введите тип вагона "passenger" или "cargo"'
+    puts 'Введите номер поезда тип вагона "passenger" или "cargo"'
     num_train = gets.chomp.to_i
     railcar = create_railcar
     case railcar.type
@@ -201,8 +198,8 @@ class Main
     show_station
     puts 'Введите номер станции'
     num_station = gets.chomp.to_i
-    @stations[num_station].show_train do |train|
-      train.each { |train| puts "#{train.number} #{num += 1}" }
+    @stations[num_station].show_train do |trains|
+      trains.each { |train| puts "#{train.number} #{num += 1}" }
     end
   end
 
@@ -211,8 +208,8 @@ class Main
     show_train_in_station
     puts 'Введите индекс поезда'
     num_train = gets.chomp.to_i
-    @trains[num_train].show_railcar do |railcar|
-      railcar.each { |railcar| puts "#{railcar.type} #{num += 1}" }
+    @trains[num_train].show_railcar do |railcars|
+      railcars.each { |railcar| puts "#{railcar.type} #{num += 1}" }
     end
   end
 

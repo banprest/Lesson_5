@@ -9,23 +9,17 @@ class Train
 
   NUMBER_FORMAT = /^[а-я0-9]{3}-*{1}[а-я0-9]{2}$/i.freeze
 
-  @@trains = []
+  @@trains = {}
 
   def self.find(num)
-    @@trains.each do |id|
-      if id.number == num
-        return id
-      else
-        return nil
-      end
-    end
+    @@trains[num]
   end
 
   def initialize(number)
     @number = number
     @railcar = []
     @speed = 0
-    @@trains << self
+    @@trains[number] = self
     register_instance
     validate!
   end
