@@ -20,6 +20,7 @@ class Main
     @trains = []
   end
 
+  # rubocop: disable Metrics/MethodLength
   def menu
     loop do
       choise_menu
@@ -63,6 +64,8 @@ class Main
       break if break_say == 'да'
     end
   end
+
+  # rubocop: enable Metrics/MethodLength
 
   private
 
