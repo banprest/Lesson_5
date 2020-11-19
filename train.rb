@@ -3,11 +3,16 @@
 class Train
   include NameManufacturingCompany
   include InstanceCounter
+  include Validate
   attr_accessor :speed
 
   attr_reader :railcar, :type, :current_station, :number
 
   NUMBER_FORMAT = /^[а-я0-9]{3}-*{1}[а-я0-9]{2}$/i.freeze
+
+  validate :number, :percence
+  validate :number, :format, NUMBER_FORMAT
+  
 
   @@trains = {}
 
@@ -70,22 +75,12 @@ class Train
     railcar.type == :passenger
   end
 
-  def valid?
-    validate!
-    true
-  rescue StandardError
-    false
-  end
-
   def show_railcar(&block)
     block.call(@railcar)
   end
 
   protected
 
-  def validate!
-    raise 'Неправильный формат номера' if number !~ NUMBER_FORMAT
-  end
 
   def add_railcar(railcar)
     @railcar << railcar

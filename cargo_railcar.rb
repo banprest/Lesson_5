@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 class CargoRailcar < Railcar
+  include Validate
   attr_reader :type, :free_volume, :not_free_volume, :volume
+
+  validate :volume, :positive
 
   def initialize(volume)
     @volume = volume
@@ -14,11 +17,5 @@ class CargoRailcar < Railcar
   def take_the_volume(vol)
     @free_volume -= vol if @free_volume.positive?
     @not_free_volume += vol if @not_free_volume < @volume
-  end
-
-  private
-
-  def validate!
-    raise 'Введите положительное число' if volume.negative?
   end
 end

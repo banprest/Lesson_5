@@ -2,7 +2,14 @@
 
 class Station
   include InstanceCounter
+  include Accessors
+  include Validate
+
+  attr_accessor_with_history :ert
+  strong_attr_accessor :erp, String
   attr_reader :name, :trains
+
+  validate :name, :percence
 
   @@stations = []
 
@@ -30,20 +37,9 @@ class Station
     @trains.delete(train)
   end
 
-  def valid?
-    validate!
-    true
-  rescue StandardError
-    false
-  end
-
   def show_train(&block)
     block.call(@trains)
   end
 
-  private
 
-  def validate!
-    raise 'Название не должно быть пустым' if name.length.zero?
-  end
 end

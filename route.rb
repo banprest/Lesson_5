@@ -2,7 +2,11 @@
 
 class Route
   include InstanceCounter
+  include Validate
   attr_reader :route, :starting_station, :terminal_station
+
+  validate :starting_station, :type, Station
+  validate :terminal_station, :type, Station
 
   def initialize(starting_station, terminal_station)
     @starting_station = starting_station
@@ -18,19 +22,5 @@ class Route
 
   def delete_station(station)
     @route.delete(station)
-  end
-
-  def valid?
-    validate!
-    true
-  rescue StandardError
-    false
-  end
-
-  private
-
-  def validate!
-    raise 'Таких станций не существует' if starting_station.class && terminal_station.class != Station
-    raise 'Начальная и конечная станция должны быть разными' if starting_station == terminal_station
   end
 end
